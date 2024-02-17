@@ -4,6 +4,7 @@
 #include <iostream>
 #include <assert.h>
 #include "Helpers.h"
+#include "Model.h"
 
 int main(void)
 {
@@ -62,6 +63,11 @@ int main(void)
     std::string vertexShader = Helpers::FetchShaderCode(vertexDirectory);
     std::string fragmentDirectory = "src/Shaders/exampleFragment.glsl";
     std::string fragmentShader = Helpers::FetchShaderCode(fragmentDirectory);
+
+    //obj test
+    std::string objDirectory = "Data/Models/Jeep/jeep.obj";
+    Model* m = new Model();
+    Helpers::LoadObjFile(objDirectory, *m);
 
     unsigned int shader = Helpers::CreateShader(vertexShader, fragmentShader);
     glUseProgram(shader);

@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 Camera::Camera()
 {
@@ -32,4 +33,7 @@ glm::mat4 Camera::GetRotationMatrix()
 void Camera::CalculateRotationMatrix()
 {
 	glm::mat4 rot{1};
+	rot = glm::rotate(rot, m_rotation.x, glm::vec3(1, 0, 0));
+	rot = glm::rotate(rot, m_rotation.y, glm::vec3(0, 1, 0));
+	m_rotationMatrix = rot;
 }
