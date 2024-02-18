@@ -66,8 +66,8 @@ int main(void)
 
     //obj test
     std::string objDirectory = "Data/Models/Jeep/jeep.obj";
-    Model* m = new Model();
-    Helpers::LoadObjFile(objDirectory, *m);
+    //Model* m = new Model();
+    //Helpers::LoadObjFile(objDirectory, *m);
 
     unsigned int shader = Helpers::CreateShader(vertexShader, fragmentShader);
     glUseProgram(shader);

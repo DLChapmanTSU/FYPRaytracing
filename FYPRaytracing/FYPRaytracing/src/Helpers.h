@@ -10,4 +10,5 @@ public:
 	static unsigned int CreateShader(const std::string& vertex, const std::string& fragment);
 	static unsigned int CompileShader(unsigned int type, const std::string& source);
 	static bool LoadObjFile(std::string& directory, Model& m);
+	static bool LoadTexFile(std::string& directory, Model& m);
 };

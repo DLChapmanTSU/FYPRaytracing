@@ -175,3 +175,8 @@ bool Helpers::LoadObjFile(std::string& directory, Model& m)
 
 	return true;
 }
+
+bool Helpers::LoadTexFile(std::string& directory, Model& m)
+{
+	return false;
+}

@@ -1,7 +1,10 @@
 #include "Model.h"
+#include "Helpers.h"
 
-Model::Model()
+Model::Model(std::vector<std::string>& obj, std::vector<std::string>& tex)
 {
+	m_objDirectories = obj;
+	m_texDirectories = tex;
 }
 
 Model::~Model()
@@ -20,4 +23,73 @@ void Model::MakeNewMesh(std::vector<glm::vec3>& vert, std::vector<glm::vec2>& uv
 	m.m_elementCount = vertE.size();
 
 	m_meshes.push_back(m);
+}
+
+bool Model::LoadModelFiles()
+{
+	for (std::string dir : m_objDirectories)
+	{
+		if (!Helpers::LoadObjFile(dir, *this))
+			return false;
+	}
+
+	//TODO: Texture stuff here
+	return true;
+}
+
+void Model::Initialise()
+{
+	for (Mesh mesh : m_meshes)
+	{
+		//Creates VBOs out of loaded data
+		GLuint vertexVBO;
+
+		glGenBuffers(1, &vertexVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * mesh.m_vertices.size(), mesh.m_vertices.data(), GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		GLuint elementsVBO;
+
+		glGenBuffers(1, &elementsVBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementsVBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * mesh.m_vertexElements.size(), mesh.m_vertexElements.data(), GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		//TODO: Add in other elements
+
+		GLuint textureCoordsVBO;
+
+		glGenBuffers(1, &textureCoordsVBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, textureCoordsVBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(glm::vec2) * mesh.m_uvs.size(), mesh.m_uvs.data(), GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		GLuint normalsVBO;
+
+		glGenBuffers(1, &normalsVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, normalsVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * mesh.m_normals.size(), mesh.m_normals.data(), GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		//Binds all VBOs to the VAO
+		glGenVertexArrays(1, &mesh.m_VAO);
+		glBindVertexArray(mesh.m_VAO);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, textureCoordsVBO);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, normalsVBO);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementsVBO);
+
+		glBindVertexArray(0);
+	}
 }

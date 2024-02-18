@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -23,9 +24,13 @@ public:
 
 private:
 	std::vector<Mesh> m_meshes;
+	std::vector<std::string> m_objDirectories;
+	std::vector<std::string> m_texDirectories;
 public:
-	Model();
+	Model(std::vector<std::string>& obj, std::vector<std::string>& tex);
 	~Model();
 
 	void MakeNewMesh(std::vector<glm::vec3>& vert, std::vector<glm::vec2>& uv, std::vector<glm::vec3>& norm, std::vector<unsigned int>& vertE, std::vector<unsigned int>& uvE, std::vector<unsigned int>& normE);
+	bool LoadModelFiles();
+	void Initialise();
 };
