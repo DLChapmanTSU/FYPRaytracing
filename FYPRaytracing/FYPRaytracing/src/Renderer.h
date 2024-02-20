@@ -2,6 +2,7 @@
 #include <vector>
 
 class Model;
+class Camera;
 
 class Renderer
 {
@@ -14,4 +15,6 @@ public:
 	~Renderer();
 
 	bool InitialiseGeometry(std::vector<Model*>& m);
+	void Render(Camera& camera, std::vector<Model*>& models);
+	void DeleteProgram();
 };

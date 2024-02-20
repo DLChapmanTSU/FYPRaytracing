@@ -5,6 +5,8 @@
 #include <assert.h>
 #include "Helpers.h"
 #include "Model.h"
+#include "Renderer.h"
+#include "Camera.h"
 
 int main(void)
 {
@@ -32,7 +34,7 @@ int main(void)
 
     std::cout << glGetString(GL_VERSION) << std::endl;
 
-    float positions[8]
+    /*float positions[8]
     {
         -0.5f, -0.5f,
         0.5f, -0.5f,
@@ -62,27 +64,36 @@ int main(void)
     std::string vertexDirectory = "src/Shaders/exampleVertex.glsl";
     std::string vertexShader = Helpers::FetchShaderCode(vertexDirectory);
     std::string fragmentDirectory = "src/Shaders/exampleFragment.glsl";
-    std::string fragmentShader = Helpers::FetchShaderCode(fragmentDirectory);
+    std::string fragmentShader = Helpers::FetchShaderCode(fragmentDirectory);*/
 
     //obj test
     std::string objDirectory = "Data/Models/Jeep/jeep.obj";
-    //Model* m = new Model();
+    std::vector<std::string> jeepMeshes;
+    jeepMeshes.push_back(objDirectory);
+    std::vector<std::string> jeepTextures;
+    Model* m = new Model(jeepMeshes, jeepTextures);
+    m->SetWorldPosition(glm::vec3(0.0f, 0.0f, 100.0f));
+    std::vector<Model*> models;
+    models.push_back(m);
     //Helpers::LoadObjFile(objDirectory, *m);
 
-    unsigned int shader = Helpers::CreateShader(vertexShader, fragmentShader);
-    glUseProgram(shader);
+    Camera mainCamera;
+    mainCamera.SetCameraPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
-    int location = glGetUniformLocation(shader, "u_color");
-    assert(location != -1);
-    glUniform4f(location, 0.8f, 0.3f, 0.8f, 1.0f);
+    Renderer renderer;
+    renderer.InitialiseGeometry(models);
+
+    //unsigned int shader = Helpers::CreateShader(vertexShader, fragmentShader);
+    //glUseProgram(shader);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+       // glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        renderer.Render(mainCamera, models);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -91,7 +102,8 @@ int main(void)
         glfwPollEvents();
     }
 
-    glDeleteProgram(shader);
+    //glDeleteProgram(shader);
+    renderer.DeleteProgram();
 
     glfwTerminate();
     return 0;
