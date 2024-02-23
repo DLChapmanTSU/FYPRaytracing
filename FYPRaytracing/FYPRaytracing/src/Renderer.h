@@ -10,6 +10,8 @@ private:
 	//TODO: List of lights when light class is done
 
 	unsigned int m_mainProgram{ 0 };
+	unsigned int m_VAO{ 0 };
+	int m_numElements{ 36 };
 public:
 	Renderer();
 	~Renderer();

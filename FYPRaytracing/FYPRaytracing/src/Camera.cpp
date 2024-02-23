@@ -41,13 +41,18 @@ void Camera::CalculateRotationMatrix()
 //Taken from example project from the year 2 3gp module
 glm::vec3 Camera::GetForwardVector()
 {
-	glm::vec4 forward{ glm::inverse(m_rotationMatrix)* glm::vec4(0, 0, -1, 1) };
+	glm::vec4 forward{ glm::inverse(m_rotationMatrix) * glm::vec4(0, 0, -1, 1) };
 	return glm::vec3(forward);
 }
 
 //Taken from example project from the year 2 3gp module
 glm::vec3 Camera::GetUpVector()
 {
-	glm::vec4 up{ glm::inverse(m_rotationMatrix)* glm::vec4(0, 1, 0, 1) };
+	glm::vec4 up{ glm::inverse(m_rotationMatrix) * glm::vec4(0, 1, 0, 1) };
 	return glm::vec3(up);
+}
+
+void Camera::MoveCamera(GLFWwindow* window, float timePassedSecs)
+{
+	//TODO: Move Camera
 }

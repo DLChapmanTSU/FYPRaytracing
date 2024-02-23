@@ -8,7 +8,7 @@ class Camera
 private:
 	glm::vec3 m_position{0};
 	glm::vec3 m_rotation{0};
-	glm::mat4 m_rotationMatrix{0};
+	glm::mat4 m_rotationMatrix{1};
 public:
 	Camera();
 
@@ -20,4 +20,5 @@ public:
 	void CalculateRotationMatrix();
 	glm::vec3 GetForwardVector();
 	glm::vec3 GetUpVector();
+	void MoveCamera(GLFWwindow* window, float timePassedSecs);
 };

@@ -43,18 +43,24 @@ void Model::Initialise()
 	{
 		//Creates VBOs out of loaded data
 		GLuint vertexVBO;
+		
+		GLCall(glGenBuffers(1, &vertexVBO));
+		GLCall(glBindBuffer(GL_ARRAY_BUFFER, vertexVBO));
+		GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * mesh.m_vertices.size(), mesh.m_vertices.data(), GL_STATIC_DRAW));
+		GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 
-		glGenBuffers(1, &vertexVBO);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * mesh.m_vertices.size(), mesh.m_vertices.data(), GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		GLuint normalsVBO;
+
+		GLCall(glGenBuffers(1, &normalsVBO));
+		GLCall(glBindBuffer(GL_ARRAY_BUFFER, normalsVBO));
+		GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * mesh.m_normals.size(), mesh.m_normals.data(), GL_STATIC_DRAW));
 
 		GLuint elementsVBO;
 
-		glGenBuffers(1, &elementsVBO);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementsVBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * mesh.m_vertexElements.size(), mesh.m_vertexElements.data(), GL_STATIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		GLCall(glGenBuffers(1, &elementsVBO));
+		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementsVBO));
+		GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * mesh.m_vertexElements.size(), mesh.m_vertexElements.data(), GL_STATIC_DRAW));
+		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 
 		//TODO: Add in other elements
 
@@ -65,32 +71,28 @@ void Model::Initialise()
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(glm::vec2) * mesh.m_uvs.size(), mesh.m_uvs.data(), GL_STATIC_DRAW);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);*/
 
-		GLuint normalsVBO;
-
-		glGenBuffers(1, &normalsVBO);
-		glBindBuffer(GL_ARRAY_BUFFER, normalsVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * mesh.m_normals.size(), mesh.m_normals.data(), GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+		GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 
 		//Binds all VBOs to the VAO
-		glGenVertexArrays(1, &mesh.m_VAO);
-		glBindVertexArray(mesh.m_VAO);
+		GLCall(glGenVertexArrays(1, &mesh.m_VAO));
+		GLCall(glBindVertexArray(mesh.m_VAO));
 
-		glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		GLCall(glBindBuffer(GL_ARRAY_BUFFER, vertexVBO));
+		GLCall(glEnableVertexAttribArray(0));
+		GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0));
 
 		//glBindBuffer(GL_ARRAY_BUFFER, textureCoordsVBO);
 		//glEnableVertexAttribArray(1);
 		//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-		glBindBuffer(GL_ARRAY_BUFFER, normalsVBO);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		GLCall(glBindBuffer(GL_ARRAY_BUFFER, normalsVBO));
+		GLCall(glEnableVertexAttribArray(1));
+		GLCall(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0));
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementsVBO);
+		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementsVBO));
 
-		glBindVertexArray(0);
+		GLCall(glBindVertexArray(0));
 	}
 }
 

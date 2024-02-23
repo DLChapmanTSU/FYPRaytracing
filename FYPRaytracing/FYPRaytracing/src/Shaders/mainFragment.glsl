@@ -1,16 +1,16 @@
-#version 330 core
+#version 330
 
-//layout(location = 0) in vec4 u_color;
+//uniform sampler2D sampler_tex;
 
-uniform vec3 camera_direction;
+uniform vec4 diffuse_colour;
+//uniform sampler2D sampler_tex;
 
-in vec2 varying_coord;
-in vec3 varying_normal;
-in vec4 varying_position;
+in vec3 varying_colour;
+//in vec2 varying_coord;
 
 out vec4 fragment_colour;
 
-void main()
+void main(void)
 {
-	fragment_colour = vec4(1.0, 0.0, 0.0, 1.0);
+	fragment_colour = vec4(varying_colour,1.0);
 }

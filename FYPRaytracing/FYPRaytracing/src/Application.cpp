@@ -17,7 +17,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(1920, 1080, "Hello World", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -72,13 +72,13 @@ int main(void)
     jeepMeshes.push_back(objDirectory);
     std::vector<std::string> jeepTextures;
     Model* m = new Model(jeepMeshes, jeepTextures);
-    m->SetWorldPosition(glm::vec3(0.0f, 0.0f, 100.0f));
+    m->SetWorldPosition(glm::vec3(0.0f, 0.0f, 0.0f));
     std::vector<Model*> models;
     models.push_back(m);
     //Helpers::LoadObjFile(objDirectory, *m);
 
-    Camera mainCamera;
-    mainCamera.SetCameraPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    Camera* mainCamera = new Camera();
+    mainCamera->SetCameraPosition(glm::vec3(0.0f, 15.0f, 50.0f));
 
     Renderer renderer;
     renderer.InitialiseGeometry(models);
@@ -91,9 +91,10 @@ int main(void)
     {
         /* Render here */
        // glClear(GL_COLOR_BUFFER_BIT);
+        mainCamera->CalculateRotationMatrix();
 
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-        renderer.Render(mainCamera, models);
+        renderer.Render(*mainCamera, models);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

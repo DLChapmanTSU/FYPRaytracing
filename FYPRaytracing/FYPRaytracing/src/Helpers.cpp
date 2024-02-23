@@ -1,6 +1,4 @@
 #include "Helpers.h"
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include <iostream>
 #include <fstream>
 #include <assert.h>
@@ -40,13 +38,13 @@ unsigned int Helpers::CreateShader(const std::string& vertex, const std::string&
 
 	assert(vertexShader != 0 && fragmentShader != 0);
 
-	glAttachShader(program, vertexShader);
-	glAttachShader(program, fragmentShader);
-	glLinkProgram(program);
-	glValidateProgram(program);
+	GLCall(glAttachShader(program, vertexShader));
+	GLCall(glAttachShader(program, fragmentShader));
+	GLCall(glLinkProgram(program));
+	GLCall(glValidateProgram(program));
 
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
+	GLCall(glDeleteShader(vertexShader));
+	GLCall(glDeleteShader(fragmentShader));
 	return program;
 }
 
@@ -54,18 +52,18 @@ unsigned int Helpers::CompileShader(unsigned int type, const std::string& source
 {
 	unsigned int id = glCreateShader(type);
 	const char* src = source.c_str();
-	glShaderSource(id, 1, &src, nullptr);
-	glCompileShader(id);
+	GLCall(glShaderSource(id, 1, &src, nullptr));
+	GLCall(glCompileShader(id));
 
 	//Error checks
 	int result;
-	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
+	GLCall(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
 	if (result == GL_FALSE)
 	{
 		int length;
-		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+		GLCall(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
 		char* message = (char*)alloca(length * sizeof(char));
-		glGetShaderInfoLog(id, length, &length, message);
+		GLCall(glGetShaderInfoLog(id, length, &length, message));
 		std::cout << "Failed shader compile!" << std::endl;
 		switch (type)
 		{
@@ -83,7 +81,7 @@ unsigned int Helpers::CompileShader(unsigned int type, const std::string& source
 			break;
 		}
 		std::cout << message << std::endl;
-		glDeleteShader(id);
+		GLCall(glDeleteShader(id));
 		return 0;
 	}
 
