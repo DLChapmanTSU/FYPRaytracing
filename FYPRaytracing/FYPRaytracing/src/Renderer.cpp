@@ -159,7 +159,7 @@ bool Renderer::InitialiseGeometry(std::vector<Model*>& m)
 void Renderer::Render(Camera& camera, std::vector<Model*>& models)
 {
     glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -199,16 +199,16 @@ void Renderer::Render(Camera& camera, std::vector<Model*>& models)
 	//}
 
 	// Send the model matrix to the shader in a uniform
-	GLuint model_xform_id = glGetUniformLocation(m_mainProgram, "model_xform");
-	glUniformMatrix4fv(model_xform_id, 1, GL_FALSE, glm::value_ptr(model_xform));
+	//GLuint model_xform_id = glGetUniformLocation(m_mainProgram, "model_xform");
+	//glUniformMatrix4fv(model_xform_id, 1, GL_FALSE, glm::value_ptr(model_xform));
 
 
 
 	// Bind our VAO and render
-	glBindVertexArray(m_VAO);
-	glDrawElements(GL_TRIANGLES, m_numElements, GL_UNSIGNED_INT, (void*)0);
+	//glBindVertexArray(m_VAO);
+	//glDrawElements(GL_TRIANGLES, m_numElements, GL_UNSIGNED_INT, (void*)0);
 
-    /*unsigned int camera_direction_id = glGetUniformLocation(m_mainProgram, "camera_direction");
+    unsigned int camera_direction_id = glGetUniformLocation(m_mainProgram, "camera_direction");
     GLCall(glUniform3fv(camera_direction_id, 1, glm::value_ptr(camera.GetForwardVector())));
 
     for (Model* m : models)
@@ -235,7 +235,7 @@ void Renderer::Render(Camera& camera, std::vector<Model*>& models)
                 GLCall(glBindVertexArray(0));
             }
         }
-    }*/
+    }
 }
 
 void Renderer::DeleteProgram()

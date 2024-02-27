@@ -8,6 +8,15 @@
 #include "Renderer.h"
 #include "Camera.h"
 
+#define MOUSE_DEFAULT  999999999.0f
+
+void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+Camera* g_mainCamera;
+bool g_isRunning{ true };
+float g_lastMouseX{ MOUSE_DEFAULT };
+float g_lastMouseY{ MOUSE_DEFAULT };
+
 int main(void)
 {
     GLFWwindow* window;
@@ -77,8 +86,8 @@ int main(void)
     models.push_back(m);
     //Helpers::LoadObjFile(objDirectory, *m);
 
-    Camera* mainCamera = new Camera();
-    mainCamera->SetCameraPosition(glm::vec3(0.0f, 15.0f, 50.0f));
+    g_mainCamera= new Camera();
+    g_mainCamera->SetCameraPosition(glm::vec3(0.0f, -100.0f, 100.0f));
 
     Renderer renderer;
     renderer.InitialiseGeometry(models);
@@ -86,15 +95,29 @@ int main(void)
     //unsigned int shader = Helpers::CreateShader(vertexShader, fragmentShader);
     //glUseProgram(shader);
 
+
+    glfwSetKeyCallback(window, KeyCallback);
+
+    float timeStep = 0.0f;
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(window) && g_isRunning)
     {
+        g_mainCamera->CalculateRotationMatrix();
+        if (timeStep > 0.0f)
+        {
+            g_mainCamera->Update(glfwGetTime() - timeStep);
+            timeStep = glfwGetTime();
+        }
+        else
+        {
+            timeStep = glfwGetTime();
+        }
         /* Render here */
        // glClear(GL_COLOR_BUFFER_BIT);
-        mainCamera->CalculateRotationMatrix();
+        
 
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-        renderer.Render(*mainCamera, models);
+        renderer.Render(*g_mainCamera, models);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -108,4 +131,53 @@ int main(void)
 
     glfwTerminate();
     return 0;
+}
+
+void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (action == GLFW_PRESS || action == GLFW_RELEASE)
+    {
+        if (action == GLFW_PRESS && key == GLFW_KEY_ESCAPE)
+        {
+            g_isRunning = false;
+            return;
+        }
+
+
+        switch (key)
+        {
+        case GLFW_KEY_W:
+            g_mainCamera->ToggleInput(CameraInputs::E_FORWARD);
+            break;
+        case GLFW_KEY_S:
+            g_mainCamera->ToggleInput(CameraInputs::E_BACKWARD);
+            break;
+        case GLFW_KEY_D:
+            g_mainCamera->ToggleInput(CameraInputs::E_RIGHT);
+            break;
+        case GLFW_KEY_A:
+            g_mainCamera->ToggleInput(CameraInputs::E_LEFT);
+            break;
+        case GLFW_KEY_E:
+            g_mainCamera->ToggleInput(CameraInputs::E_UP);
+            break;
+        case GLFW_KEY_Q:
+            g_mainCamera->ToggleInput(CameraInputs::E_DOWN);
+            break;
+        case GLFW_KEY_RIGHT:
+            g_mainCamera->ToggleInput(CameraInputs::E_ROTATE_RIGHT);
+            break;
+        case GLFW_KEY_LEFT:
+            g_mainCamera->ToggleInput(CameraInputs::E_ROTATE_LEFT);
+            break;
+        case GLFW_KEY_UP:
+            g_mainCamera->ToggleInput(CameraInputs::E_ROTATE_UP);
+            break;
+        case GLFW_KEY_DOWN:
+            g_mainCamera->ToggleInput(CameraInputs::E_ROTATE_DOWN);
+            break;
+        default:
+            break;
+        }
+    }
 }

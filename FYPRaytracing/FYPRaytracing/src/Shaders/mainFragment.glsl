@@ -12,5 +12,5 @@ out vec4 fragment_colour;
 
 void main(void)
 {
-	fragment_colour = vec4(varying_colour,1.0);
+	fragment_colour = vec4(1.0f,0.0f,0.0f,1.0f);
 }
